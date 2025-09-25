@@ -16,6 +16,14 @@
         android:textStyle="bold"
         android:layout_marginBottom="32dp"/>
 
+    <!-- Whackmole Button -->
+    <Button
+        android:id="@+id/btnWhackmole"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Whack-A-Mole"
+        android:layout_marginBottom="16dp"/>
+
     <!-- Stopwatch Button -->
     <Button
         android:id="@+id/btnStopwatch"

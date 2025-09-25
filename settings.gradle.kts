@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "StopwatchSample"
+rootProject.name = "WhackMole"
 include(":app")
  

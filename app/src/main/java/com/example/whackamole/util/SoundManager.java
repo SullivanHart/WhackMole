@@ -1,10 +1,12 @@
-package com.example.whackamole;
+package com.example.whackamole.util;
 
 import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
+
+import com.example.whackamole.R;
 
 /**
  * Simple wrapper for SoundPool to play short sound effects.
@@ -26,15 +28,13 @@ public class SoundManager {
                     .setMaxStreams(4)
                     .build();
         } else {
-            // deprecated constructor for older devices
             soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
         }
 
-        // load sounds from res/raw (IDs must match files you added)
         spawnSoundId = soundPool.load(context, R.raw.spawn, 1);
         hitSoundId   = soundPool.load(context, R.raw.hit, 1);
 
-        // optional: mark as loaded after short delay or use soundPool.setOnLoadCompleteListener
+        // idk abt this
         soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
             @Override
             public void onLoadComplete(SoundPool sp, int sampleId, int status) {

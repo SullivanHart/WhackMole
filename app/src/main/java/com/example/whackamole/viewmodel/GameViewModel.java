@@ -1,4 +1,4 @@
-package com.example.whackamole;
+package com.example.whackamole.viewmodel;
 
 import android.app.Application;
 
@@ -6,6 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
+import com.example.whackamole.util.ScoreManager;
+import com.example.whackamole.controller.GameController;
 
 /**
  * ViewModel that exposes LiveData for the UI and forwards actions to GameController.
@@ -25,7 +28,6 @@ public class GameViewModel extends AndroidViewModel implements GameController.Ga
     public GameViewModel(@NonNull Application application) {
         super(application);
 
-        // configure number of holes and allowed misses here
         int numHoles = 9; // 3x3 grid
         int maxMisses = 3;
 
@@ -34,15 +36,14 @@ public class GameViewModel extends AndroidViewModel implements GameController.Ga
 
         scoreManager = new ScoreManager(application.getApplicationContext());
 
-        // initialize LiveData with sensible defaults
-        holesLive.setValue(new int[numHoles]); // all zeros (no mole)
-        scoreLive.setValue(0);
+        // initialize
+        holesLive.setValue(new int[numHoles]);
         missesLive.setValue(0);
         highScoreLive.setValue(scoreManager.getHighScore());
         gameOverLive.setValue(false);
     }
 
-    // --- LiveData getters ---
+    // --- getters ---
     public LiveData<int[]> getHoles() {
         return holesLive;
     }
@@ -63,7 +64,7 @@ public class GameViewModel extends AndroidViewModel implements GameController.Ga
         return gameOverLive;
     }
 
-    // --- Commands forwarded to controller ---
+    // --- commands to controller ---
     public void startGame() {
         gameOverLive.setValue(false);
         controller.start();
@@ -82,7 +83,7 @@ public class GameViewModel extends AndroidViewModel implements GameController.Ga
     }
 
     /**
-     * Attempt to tap a hole. Returns true if it was a hit (mole present).
+     * Attempt to tap a hole. Returns true if it was a hit (mole).
      * The controller will still post updates (score/misses) via the GameEventListener callbacks.
      *
      * @param index hole index tapped
@@ -92,10 +93,9 @@ public class GameViewModel extends AndroidViewModel implements GameController.Ga
         return controller.tapHole(index);
     }
 
-    // --- GameController.GameEventListener callbacks ---
+    // --- callbacks ---
     @Override
     public void onHolesUpdated(int[] holes) {
-        // postValue so it works from background threads as well
         holesLive.postValue(holes);
     }
 
@@ -111,7 +111,6 @@ public class GameViewModel extends AndroidViewModel implements GameController.Ga
 
     @Override
     public void onGameOver(int finalScore) {
-        // persist high score if necessary
         int hs = scoreManager.getHighScore();
         if (finalScore > hs) {
             scoreManager.setHighScore(finalScore);
@@ -123,7 +122,6 @@ public class GameViewModel extends AndroidViewModel implements GameController.Ga
     @Override
     protected void onCleared() {
         super.onCleared();
-        // cleanup controller to avoid leaked handlers/runnables
         controller.destroy();
     }
 }

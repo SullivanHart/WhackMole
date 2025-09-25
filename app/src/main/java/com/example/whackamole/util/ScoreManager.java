@@ -1,4 +1,4 @@
-package com.example.whackamole;
+package com.example.whackamole.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;

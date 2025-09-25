@@ -1,4 +1,4 @@
-package com.example.whackamole;
+package com.example.whackamole.controller;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -107,16 +107,14 @@ public class GameController {
 
     private void spawnMole() {
         int idx = pickRandomUnoccupiedHole();
-        if (idx < 0) return; // all occupied or none available
+        if (idx < 0) return;
         occupied[idx] = true;
         totalSpawns++;
 
-        // schedule hide after moleVisibleMs (counts as miss if not tapped)
         final int holeIndex = idx;
         Runnable hideRunnable = new Runnable() {
             @Override
             public void run() {
-                // if still occupied -> it timed out -> miss
                 if (occupied[holeIndex]) {
                     occupied[holeIndex] = false;
                     hideRunnables.remove(holeIndex);
@@ -132,7 +130,6 @@ public class GameController {
 
         notifyHoles();
 
-        // difficulty scaling: every 5 spawns get slightly faster, slightly shorter visible time
         if (totalSpawns % 5 == 0) {
             spawnIntervalMs = Math.max(minSpawnIntervalMs, (long) (spawnIntervalMs - 75));
             moleVisibleMs = Math.max(minMoleVisibleMs, (long) (moleVisibleMs - 50));
@@ -147,7 +144,6 @@ public class GameController {
             if (!occupied[idx]) return idx;
             attempts++;
         }
-        // fallback: scan for first unoccupied
         for (int i = 0; i < numHoles; ++i) if (!occupied[i]) return i;
         return -1; // all occupied
     }
@@ -170,7 +166,6 @@ public class GameController {
             notifyScore();
             return true;
         } else {
-            // miss when tapping empty hole: per spec this has no effect
             return false;
         }
     }

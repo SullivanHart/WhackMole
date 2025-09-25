@@ -1,3 +1,8 @@
+import org.gradle.external.javadoc.StandardJavadocDocletOptions
+import org.gradle.api.tasks.javadoc.Javadoc
+import org.gradle.kotlin.dsl.api
+import org.gradle.kotlin.dsl.invoke
+
 plugins {
     alias(libs.plugins.android.application)
 }

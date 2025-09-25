@@ -1,4 +1,4 @@
-package com.example.whackamole;
+package com.example.whackamole.view;
 
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +10,10 @@ import android.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.example.whackamole.R;
+import com.example.whackamole.util.SoundManager;
+import com.example.whackamole.viewmodel.GameViewModel;
 
 /**
  * Main Activity for Whack-a-Mole game. Wires UI to GameViewModel.
@@ -31,10 +35,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         soundManager = new SoundManager(this);
-
         viewModel = new ViewModelProvider(this).get(GameViewModel.class);
 
-        // UI references - make sure these IDs exist in activity_main.xml
+        // UI references
         holes = new ImageView[] {
                 findViewById(R.id.hole0),
                 findViewById(R.id.hole1),
@@ -53,9 +56,9 @@ public class MainActivity extends AppCompatActivity {
         btnStart = findViewById(R.id.btnStart);
         btnReset = findViewById(R.id.btnReset);
 
-        previousHoles = new int[holes.length]; // all zeros by default
+        previousHoles = new int[holes.length]; // all zeros at start
 
-        // Set listeners for hole clicks (play hit sound on successful hit)
+        // Set listeners for hole clicks
         for (int i = 0; i < holes.length; ++i) {
             final int idx = i;
             holes[i].setOnClickListener(new View.OnClickListener() {
@@ -65,12 +68,11 @@ public class MainActivity extends AppCompatActivity {
                     if (hit) {
                         soundManager.playHit();
                     }
-                    // tapping empty hole does nothing per spec
                 }
             });
         }
 
-        // Observe holes state and play spawn sound when a hole transitions 0 -> 1
+        // Look at hole state and play spawn sound when a hole changes
         viewModel.getHoles().observe(this, new Observer<int[]>() {
             @Override
             public void onChanged(int[] holesState) {
@@ -83,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
                         holes[i].setImageResource(R.drawable.hole_empty);
                     }
 
-                    // detect 0 -> 1 transition (mole just appeared)
                     if (previousHoles != null && previousHoles.length == holesState.length) {
                         if (previousHoles[i] == 0 && holesState[i] == 1) {
                             // play spawn SFX
@@ -92,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
-                // copy current state into previousHoles
                 System.arraycopy(holesState, 0, previousHoles, 0, Math.min(previousHoles.length, holesState.length));
             }
         });
@@ -158,18 +158,18 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Release resources. Only stop the game when the Activity is really finishing
-     * (so we don't pause the game on rotation).
+     * (so it doesnt pause the game on rotation).
      */
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        // If the activity is finishing (back pressed or app closed), stop the game so controller's handler stops.
+        // If the activity is finishing stop the game so controller's handler stops
         if (isFinishing()) {
             viewModel.stopGame();
         }
 
-        // Release SoundManager resources to avoid leaks
+        // release soundManager to avoid leaks
         if (soundManager != null) {
             soundManager.release();
             soundManager = null;

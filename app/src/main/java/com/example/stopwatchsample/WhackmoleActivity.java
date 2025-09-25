@@ -3,6 +3,7 @@
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,8 @@ public class WhackmoleActivity extends AppCompatActivity {
     private TextView tvTime;
     private Button btnStartStop, btnReset;
 
+    private ImageView[] Xs;
+
     private LiveData<Long> time;
     private long hours;
     private long minutes;
@@ -25,15 +28,16 @@ public class WhackmoleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_stopwatch);
+        setContentView(R.layout.activity_whackmole);
 
         // Initialize ViewModel
         viewModel = new ViewModelProvider(this).get(StopwatchViewModel.class);
 
         // Initialize UI components (TextView, Buttons)
         tvTime = findViewById(R.id.tvTime);
-        btnStartStop = findViewById(R.id.btnStartStop);
-        btnReset = findViewById(R.id.btnReset);
+        Xs = new ImageView[] {
+                findViewById(R.id.x0), findViewById(R.id.x1), findViewById(R.id.x2)
+            };
 
         // Format elapsed time for display
         time = viewModel.getElapsedTime();

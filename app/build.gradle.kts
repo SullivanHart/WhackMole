@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.stopwatchsample"
+    namespace = "com.example.whackamole"
     compileSdk = 34
 
     defaultConfig {

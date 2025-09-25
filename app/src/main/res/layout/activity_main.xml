@@ -1,34 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:gravity="center_horizontal">
 
-    <!-- TextView to display elapsed time -->
-    <TextView
-        android:id="@+id/tvTime"
+    <!-- Score / High score / Misses row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:id="@+id/tvScore"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Score: 0"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:gravity="start" />
+
+        <TextView
+            android:id="@+id/tvMisses"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Misses: 0"
+            android:textSize="16sp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/tvHighScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="High: 0"
+            android:textSize="16sp"
+            android:gravity="end" />
+    </LinearLayout>
+
+    <!-- Game grid: 3x3 holes -->
+    <GridLayout
+        android:id="@+id/grid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="00:00:00.0"
-        android:textSize="48sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="32dp"/>
+        android:columnCount="3"
+        android:rowCount="3"
+        android:alignmentMode="alignMargins"
+        android:useDefaultMargins="true"
+        android:layout_marginBottom="16dp">
 
-    <!-- Start/Stop Button -->
-    <Button
-        android:id="@+id/btnStartStop"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:text="Start/Stop"
-        android:layout_marginBottom="16dp"/>
+        <!-- Row 0 -->
+        <ImageView
+            android:id="@+id/hole0"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/hole_empty"
+            android:contentDescription="Hole 0"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:clickable="true" />
 
-    <!-- Reset Button -->
-    <Button
-        android:id="@+id/btnReset"
-        android:layout_width="200dp"
+        <ImageView
+            android:id="@+id/hole1"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/hole_empty"
+            android:contentDescription="Hole 1"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:clickable="true" />
+
+        <ImageView
+            android:id="@+id/hole2"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/hole_empty"
+            android:contentDescription="Hole 2"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:clickable="true" />
+
+        <!-- Row 1 -->
+        <ImageView
+            android:id="@+id/hole3"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/hole_empty"
+            android:contentDescription="Hole 3"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:clickable="true" />
+
+        <ImageView
+            android:id="@+id/hole4"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/hole_empty"
+            android:contentDescription="Hole 4"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:clickable="true" />
+
+        <ImageView
+            android:id="@+id/hole5"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/hole_empty"
+            android:contentDescription="Hole 5"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:clickable="true" />
+
+        <!-- Row 2 -->
+        <ImageView
+            android:id="@+id/hole6"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/hole_empty"
+            android:contentDescription="Hole 6"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:clickable="true" />
+
+        <ImageView
+            android:id="@+id/hole7"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/hole_empty"
+            android:contentDescription="Hole 7"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:clickable="true" />
+
+        <ImageView
+            android:id="@+id/hole8"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/hole_empty"
+            android:contentDescription="Hole 8"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:clickable="true" />
+    </GridLayout>
+
+    <!-- Controls -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Reset"/>
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="8dp">
+
+        <Button
+            android:id="@+id/btnStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start"
+            android:layout_marginEnd="12dp" />
+
+        <Button
+            android:id="@+id/btnReset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reset" />
+    </LinearLayout>
 
 </LinearLayout>

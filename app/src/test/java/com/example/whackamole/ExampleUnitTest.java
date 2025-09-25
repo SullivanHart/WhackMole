@@ -1,4 +1,4 @@
-package com.example.stopwatchsample;
+package com.example.whackamole;
 
 import org.junit.Test;
 

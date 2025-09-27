@@ -61,13 +61,6 @@
         android:textSize="24sp"
         android:layout_marginBottom="24dp"/>
 
-    <!-- Reset Button -->
-    <Button
-        android:id="@+id/btnReset"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:text="Reset"/>
-
     <!-- Grid of holes -->
     <GridLayout
         android:id="@+id/gridHoles"
@@ -77,5 +70,28 @@
         android:columnCount="3"
         android:rowCount="3"
         android:useDefaultMargins="true"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:id="@+id/btnContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="24dp">
+
+        <!-- Start/Stop Button -->
+        <Button
+            android:id="@+id/btnStartStop"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Start"/>
+
+    </LinearLayout>
 
 </LinearLayout>

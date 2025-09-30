@@ -11,7 +11,6 @@ import java.util.Random;
 
 
 public class WhackmoleViewModel extends ViewModel {
-    private long startTime = 0L;
     private boolean running = false;
 
     private Handler handler = new Handler();
@@ -21,12 +20,10 @@ public class WhackmoleViewModel extends ViewModel {
 
     private final MutableLiveData<Integer> activeMoleIndex = new MutableLiveData<>(-1);
     private final MutableLiveData<Integer> score = new MutableLiveData<>(0);
-    private final MutableLiveData<Integer> lives = new MutableLiveData<>(0);
-    private MutableLiveData<Long> elapsedTime = new MutableLiveData<>(0L);
+    private final MutableLiveData<Integer> lives = new MutableLiveData<>(3);
+    private Handler moleHandler = new Handler();
+    private Runnable moleTimeoutRunnable;
 
-    public LiveData<Long> getElapsedTime() {
-        return elapsedTime;
-    }
     public LiveData<Integer> getActiveMoleIndex() {
         return activeMoleIndex;
     }
@@ -39,16 +36,13 @@ public class WhackmoleViewModel extends ViewModel {
 
     public void start() {
 
-        elapsedTime.setValue(0L);
-        score.setValue( 0 );
+        reset();
 
         if (!running) {
-            startTime = SystemClock.elapsedRealtime() - (elapsedTime.getValue() != null ? elapsedTime.getValue() : 0);
             running = true;
             updateRunnable = new Runnable() {
                 @Override
                 public void run() {
-                    elapsedTime.setValue(SystemClock.elapsedRealtime() - startTime);
                     handler.postDelayed(this, 10); // update every 10ms
                 }
             };
@@ -72,20 +66,42 @@ public class WhackmoleViewModel extends ViewModel {
     // Make a mole appear ( so it can be hit )
     public void showMole() {
         activeMoleIndex.setValue( rand.nextInt(9) );
+
+        moleHandler.removeCallbacks(moleTimeoutRunnable);
+
+        moleTimeoutRunnable = new Runnable() {
+            @Override
+            public void run() {
+                // if mole is still active ( hasn't been clicked )
+                if (activeMoleIndex.getValue() != null && activeMoleIndex.getValue() != -1) {
+                    loseLife();
+                    hideMole();
+                    // spawn another mole ( if another life )
+                    if (lives.getValue() != null && lives.getValue() > 0) {
+                        showMole();
+                    }
+                }
+            }
+        };
+
+        // Every 5 hits, reduce the time. min .5
+        long timeout = (long) ( 5000 * Math.pow( 0.75, Math.floor( score.getValue() / 5 ) ) );
+        moleHandler.postDelayed( moleTimeoutRunnable, Math.max( timeout, 500 ) );
     }
     // hide the mole
     public void hideMole() {
         activeMoleIndex.setValue( -1 );
+        moleHandler.removeCallbacks( moleTimeoutRunnable );
     }
 
     // hit a hole
     public void hitHole(int index) {
         // check for mole
         if ( activeMoleIndex.getValue() != null && activeMoleIndex.getValue() == index ) {
-            score.setValue( score.getValue() + 1 );
+            Integer val = score.getValue();
+            score.setValue( val != null ? val + 1 : 1 );
             hideMole();
             showMole();
-
         }
     }
 
@@ -98,5 +114,12 @@ public class WhackmoleViewModel extends ViewModel {
                 stop(); // game over
             }
         }
+    }
+
+    // reset
+    public void reset() {
+        score.setValue( 0 );
+        lives.setValue( 3 );
+        stop();
     }
 }

@@ -6,7 +6,11 @@ import java.util.Random;
 
 import android.animation.ValueAnimator;
 import android.graphics.Rect;
+import android.media.AudioAttributes;
+import android.media.SoundPool;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.animation.PathInterpolator;
 import android.widget.Button;
@@ -22,6 +26,12 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 public class WhackmoleActivity extends AppCompatActivity implements GameOverFragment.GameOverListener {
+
+    // Mole stuff
+    private SoundPool soundPool;
+    private int mole_dur = 1000;
+    private int[] moleSounds;
+    private Random random = new Random();
 
     // Grid layouts
     private GridLayout gridHoles;
@@ -80,10 +90,36 @@ public class WhackmoleActivity extends AppCompatActivity implements GameOverFrag
             if (viewModel.is_running()) {
                 endGame();
             } else {
-                viewModel.start();
-                btnStartStop.setText("Stop");
+                startGame();
             }
         });
+
+        // setup mole sounds
+        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_GAME)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+        soundPool = new SoundPool.Builder()
+                .setMaxStreams(5)
+                .setAudioAttributes(audioAttributes)
+                .build();
+
+        moleSounds = new int[]{
+                soundPool.load(this, R.raw.ow0, 1),
+                soundPool.load(this, R.raw.ow1, 1),
+                soundPool.load(this, R.raw.ow2, 1),
+                soundPool.load(this, R.raw.ow3, 1),
+                soundPool.load(this, R.raw.ow4, 1),
+                soundPool.load(this, R.raw.ow5, 1),
+                soundPool.load(this, R.raw.ow6, 1),
+                soundPool.load(this, R.raw.ow7, 1),
+                soundPool.load(this, R.raw.ow8, 1),
+                soundPool.load(this, R.raw.ow9, 1),
+                soundPool.load(this, R.raw.ow10, 1),
+                soundPool.load(this, R.raw.ow11, 1),
+                soundPool.load(this, R.raw.ow12, 1),
+                soundPool.load(this, R.raw.ow13, 1)
+        };
 
         // setup the grid ( once its ready )
         gridHoles.post( () -> {
@@ -95,7 +131,7 @@ public class WhackmoleActivity extends AppCompatActivity implements GameOverFrag
             for (int i = 0; i < gridSize * gridSize; i++) {
                 FrameLayout frame = new FrameLayout(this);
 
-                int holeRes = holeDrawables[new Random().nextInt(holeDrawables.length)];
+                int holeRes = holeDrawables[ random.nextInt(holeDrawables.length)];
                 ImageView holeImg = new ImageView(this);
                 holeImg.setImageResource(holeRes);
                 holeImg.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -115,7 +151,18 @@ public class WhackmoleActivity extends AppCompatActivity implements GameOverFrag
                 frame.setLayoutParams(params);
 
                 int finalI = i;
-                frame.setOnClickListener(v -> viewModel.hitHole(finalI));
+                frame.setOnClickListener(v -> {
+                        viewModel.hitHole(finalI);
+
+                        // pick a random sound
+                        int soundId = moleSounds[random.nextInt(moleSounds.length)];
+                        int streamId = soundPool.play(soundId, 1f, 1f, 1, 0, 1f);
+
+                        // stop sound after mole_dur
+                        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                            soundPool.stop(streamId);
+                        }, mole_dur);
+                });
 
                 gridHoles.addView(frame);
             }
@@ -218,6 +265,8 @@ public class WhackmoleActivity extends AppCompatActivity implements GameOverFrag
     }
 
     private void endGame(){
+        viewModel.stop();
+
         btnStartStop.setText("Restart");
         int finalScore = viewModel.getScore().getValue() != null ? viewModel.getScore().getValue() : 0;
 
@@ -225,11 +274,15 @@ public class WhackmoleActivity extends AppCompatActivity implements GameOverFrag
         fragment.show(getSupportFragmentManager(), "GameOverDialog");
     }
 
+    private void startGame() {
+        btnStartStop.setText("Stop");
+        viewModel.start();
+    }
+
     @Override
     public void onRestartGame() {
-        // Reset lives + score + UI
         viewModel.reset();
         setupLives(numLives);
-        btnStartStop.setText("Start");
+        startGame();
     }
 }

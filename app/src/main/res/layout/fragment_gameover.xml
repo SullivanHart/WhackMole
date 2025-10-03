@@ -1,51 +1,66 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="32dp"
-    android:gravity="center"
-    android:background="@drawable/rounded_bkgrnd">
+    app:cardCornerRadius="16dp"
+    app:cardBackgroundColor="?attr/colorOnPrimary"
+    app:cardElevation="8dp"
+    app:cardPreventCornerOverlap="false"
+    android:clipChildren="true"
+    android:clipToOutline="true">
 
-    <TextView
-        android:id="@+id/tvGameOver"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="GAME OVER"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        android:textColor="@color/red"
-        android:shadowColor="@color/black"
-        android:shadowDx="4"
-        android:shadowDy="4"
-        android:shadowRadius="6"
-        android:layout_marginBottom="24dp"/>
-
-    <TextView
-        android:id="@+id/tvFinalScore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Score: 0"
-        android:textSize="34sp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:shadowColor="@color/black"
-        android:shadowDx="3"
-        android:shadowDy="3"
-        android:shadowRadius="5"
-        android:background="@drawable/score_highlight"
-        android:padding="12dp"
-        android:layout_marginBottom="32dp"/>
-
-
-    <Button
-        android:id="@+id/btnRestart"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="Restart"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/red"
-        android:layout_marginTop="16dp"/>
-</LinearLayout>
+        android:orientation="vertical"
+        android:padding="32dp"
+        android:gravity="center"
+        android:clipChildren="true"
+        android:clipToPadding="true">
+
+        <TextView
+            android:id="@+id/tvGameOver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GAME OVER"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            android:textColor="@color/red"
+            android:shadowColor="@color/black"
+            android:shadowDx="4"
+            android:shadowDy="4"
+            android:shadowRadius="6"
+            android:layout_marginBottom="24dp"/>
+
+        <TextView
+            android:id="@+id/tvFinalScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Score: 0"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:shadowColor="@color/black"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="5"
+            android:background="@drawable/score_highlight"
+            android:padding="12dp"
+            android:layout_marginBottom="32dp"/>
+
+
+        <Button
+            android:id="@+id/btnRestart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Restart"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/red"
+            android:layout_marginTop="16dp"/>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
+

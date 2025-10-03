@@ -9,7 +9,9 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.Random;
 
-
+/**
+ * Contains the Whack-A-Mole game logic.
+ */
 public class WhackmoleViewModel extends ViewModel {
     private boolean running = false;
 
@@ -24,16 +26,33 @@ public class WhackmoleViewModel extends ViewModel {
     private Handler moleHandler = new Handler();
     private Runnable moleTimeoutRunnable;
 
+    /**
+     * Returns the position of the mole.
+     * @return The index of the hole that contains the mole.
+     */
     public LiveData<Integer> getActiveMoleIndex() {
         return activeMoleIndex;
     }
+
+    /**
+     * Returns the number of point the player has accumulated in the current the game.
+     * @return The score.
+     */
     public LiveData<Integer> getScore() {
         return score;
     }
+
+    /**
+     * Returns the number of lives the player has remaining before the game ends.
+     * @return The number of lives remaining.
+     */
     public LiveData<Integer> getLives() {
         return lives;
     }
 
+    /**
+     * Starts the game.
+     */
     public void start() {
 
         reset();
@@ -51,6 +70,9 @@ public class WhackmoleViewModel extends ViewModel {
         }
     }
 
+    /**
+     * Stops the game.
+     */
     public void stop() {
         if (running) {
             handler.removeCallbacks(updateRunnable);
@@ -59,11 +81,17 @@ public class WhackmoleViewModel extends ViewModel {
         }
     }
 
+    /**
+     * Returns whether the game is active.
+     * @return The running boolean.
+     */
     public boolean is_running(){
         return running;
     }
 
-    // Make a mole appear ( so it can be hit )
+    /**
+     * Makes a mole appear in a random hole.
+     */
     public void showMole() {
         activeMoleIndex.setValue( rand.nextInt(9) );
 
@@ -88,13 +116,19 @@ public class WhackmoleViewModel extends ViewModel {
         long timeout = (long) ( 5000 * Math.pow( 0.75, Math.floor( score.getValue() / 5 ) ) );
         moleHandler.postDelayed( moleTimeoutRunnable, Math.max( timeout, 500 ) );
     }
-    // hide the mole
+
+    /**
+     * Hides the current mole.
+     */
     public void hideMole() {
         activeMoleIndex.setValue( -1 );
         moleHandler.removeCallbacks( moleTimeoutRunnable );
     }
 
-    // hit a hole
+    /**
+     * Hit the hole w/ the given index.
+     * @param index  The index of the hole to hit.
+     */
     public void hitHole(int index) {
         // check for mole
         if ( activeMoleIndex.getValue() != null && activeMoleIndex.getValue() == index ) {
@@ -116,7 +150,9 @@ public class WhackmoleViewModel extends ViewModel {
         }
     }
 
-    // reset
+    /**
+     * Resets the game.
+     */
     public void reset() {
         score.setValue( 0 );
         lives.setValue( 3 );

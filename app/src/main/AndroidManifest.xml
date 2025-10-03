@@ -21,7 +21,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".WhackmoleActivity"></activity>
-        <activity android:name=".StopwatchActivity"></activity>
     </application>
 
 </manifest>

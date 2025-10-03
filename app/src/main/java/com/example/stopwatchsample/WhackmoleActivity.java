@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import android.animation.ValueAnimator;
+import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
@@ -25,7 +26,14 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-public class WhackmoleActivity extends AppCompatActivity implements GameOverFragment.GameOverListener {
+ /**
+  * The Whack-A-Mole activity ( game-screen ).
+  */
+ public class WhackmoleActivity extends AppCompatActivity implements GameOverFragment.GameOverListener {
+
+    // Storage stuff
+    private static final String PREFS_NAME = "WhackMolePrefs";
+    private static final String KEY_HIGH_SCORE = "high_score";
 
     // Mole stuff
     private SoundPool soundPool;
@@ -70,6 +78,11 @@ public class WhackmoleActivity extends AppCompatActivity implements GameOverFrag
         tvScore     = findViewById(R.id.tvScore);
         btnStartStop = findViewById(R.id.btnStartStop);
         livesContainer = findViewById(R.id.livesContainer);
+
+        // get high score
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        int highScore = prefs.getInt(KEY_HIGH_SCORE, 0); // default 0 if not set
+
 
         // setup lives container
         setupLives(numLives);
@@ -270,7 +283,16 @@ public class WhackmoleActivity extends AppCompatActivity implements GameOverFrag
         btnStartStop.setText("Restart");
         int finalScore = viewModel.getScore().getValue() != null ? viewModel.getScore().getValue() : 0;
 
-        GameOverFragment fragment = GameOverFragment.newInstance(finalScore);
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        int highScore = prefs.getInt(KEY_HIGH_SCORE, 0);
+
+        if (finalScore > highScore) {
+            // Save new high score
+            prefs.edit().putInt( KEY_HIGH_SCORE, finalScore ).apply();
+            highScore = finalScore;
+        }
+
+        GameOverFragment fragment = GameOverFragment.newInstance( finalScore, highScore );
         fragment.show(getSupportFragmentManager(), "GameOverDialog");
     }
 
@@ -279,6 +301,10 @@ public class WhackmoleActivity extends AppCompatActivity implements GameOverFrag
         viewModel.start();
     }
 
+     /**
+      * Restarts the game ( resets views, interact with the game model ).
+      * Public so the fragment can reset the game.
+      */
     @Override
     public void onRestartGame() {
         viewModel.reset();

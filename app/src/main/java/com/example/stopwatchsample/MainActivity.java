@@ -8,6 +8,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+/**
+ * The landing screen ( main ) activity.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private Button btnStopwatch, btnWhackmole;
@@ -18,22 +21,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btnWhackmole = findViewById(R.id.btnWhackmole);
-        btnStopwatch = findViewById(R.id.btnStopwatch);
 
         // Set up button listener for whackmole
         btnWhackmole.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, WhackmoleActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        // Set up button listener for stopwatch
-        btnStopwatch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, StopwatchActivity.class);
                 startActivity(intent);
             }
         });

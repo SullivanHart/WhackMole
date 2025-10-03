@@ -24,14 +24,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="GAME OVER"
-            android:textSize="40sp"
+            android:textSize="50sp"
             android:textStyle="bold"
             android:textColor="@color/red"
             android:shadowColor="@color/black"
             android:shadowDx="4"
             android:shadowDy="4"
             android:shadowRadius="6"
-            android:layout_marginBottom="24dp"/>
+            android:layout_marginBottom="32dp"/>
+
+        <TextView
+            android:id="@+id/tvHighScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="High Score: 0"
+            android:textSize="34sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:shadowColor="@color/black"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="5"
+            android:background="@drawable/score_highlight"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp"/>
 
         <TextView
             android:id="@+id/tvFinalScore"
@@ -49,18 +65,16 @@
             android:padding="12dp"
             android:layout_marginBottom="32dp"/>
 
-
         <Button
             android:id="@+id/btnRestart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:text="Restart"
-            android:textSize="24sp"
+            android:textSize="34sp"
             android:textStyle="bold"
             android:textColor="@color/white"
-            android:backgroundTint="@color/red"
-            android:layout_marginTop="16dp"/>
+            android:backgroundTint="@color/red"/>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
 

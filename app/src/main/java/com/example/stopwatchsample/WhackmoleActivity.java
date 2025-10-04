@@ -181,15 +181,18 @@ import androidx.lifecycle.ViewModelProvider;
             }
 
             // Now that grid is ready, watch mole index
-            viewModel.getActiveMoleIndex().observe(this, index -> {
+            viewModel.getActiveMoles().observe(this, activeList -> {
                 for (int i = 0; i < imgMoles.length; i++) {
-                    if (i == index) {
+                    boolean shouldBeVisible = activeList.contains(i);
+                    boolean isVisible = imgMoles[i].getVisibility() == ImageView.VISIBLE;
+
+                    if (shouldBeVisible && !isVisible) {
                         animateMolePop(imgMoles[i]);
-                    } else if (imgMoles[i].getVisibility() == View.VISIBLE) {
+                    } else if (!shouldBeVisible && isVisible) {
                         animateMoleHide(imgMoles[i]);
                     }
                 }
-            } );
+            });
         } );
     }
 

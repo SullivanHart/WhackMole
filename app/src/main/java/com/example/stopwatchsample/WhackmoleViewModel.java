@@ -101,7 +101,7 @@ public class WhackmoleViewModel extends ViewModel {
         running = false;
         moleHandler.removeCallbacksAndMessages(null);
         moleRunnables.clear();
-        activeMoles.postValue(new ArrayList<>());
+        activeMoles.setValue(new ArrayList<>());
     }
 
 
@@ -127,7 +127,7 @@ public class WhackmoleViewModel extends ViewModel {
             Integer val = score.getValue();
             score.setValue(val != null ? val + 1 : 1);
             list.remove(Integer.valueOf(index));
-            activeMoles.postValue(list);
+            activeMoles.setValue(list);
 
             // cancel the timeout runnable for this mole
             Runnable toCancel = moleRunnables.remove(index);
@@ -155,7 +155,7 @@ public class WhackmoleViewModel extends ViewModel {
         stop();
         score.setValue(0);
         lives.setValue(3);
-        activeMoles.postValue( new ArrayList<>() );
+        activeMoles.setValue( new ArrayList<>() );
 
     }
 
@@ -189,7 +189,7 @@ public class WhackmoleViewModel extends ViewModel {
 
         // add to active list
         list.add(finalMoleIdx);
-        activeMoles.postValue(list);
+        activeMoles.setValue(list);
 
         Runnable moleTimeout = () -> {
             List<Integer> timeoutList = new ArrayList<>();
@@ -199,7 +199,7 @@ public class WhackmoleViewModel extends ViewModel {
 
             if (timeoutList.contains(finalMoleIdx)) {
                 timeoutList.remove(Integer.valueOf(finalMoleIdx));
-                activeMoles.postValue(timeoutList);
+                activeMoles.setValue(timeoutList);
                 loseLife();
 
                 spawnMoles();

@@ -12,6 +12,7 @@ import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.PathInterpolator;
 import android.widget.Button;
@@ -184,13 +185,17 @@ import androidx.lifecycle.ViewModelProvider;
             viewModel.getActiveMoles().observe(this, activeList -> {
                 for (int i = 0; i < imgMoles.length; i++) {
                     boolean shouldBeVisible = activeList.contains(i);
-                    boolean isVisible = imgMoles[i].getVisibility() == ImageView.VISIBLE;
+                    boolean isEnabled = imgMoles[i].isEnabled();
 
-                    if (shouldBeVisible && !isVisible) {
+                    if (shouldBeVisible && !isEnabled) {
+                        Log.d("WMA", "show mole " + i );
                         animateMolePop(imgMoles[i]);
-                    } else if (!shouldBeVisible && isVisible) {
+                    } else if (!shouldBeVisible && isEnabled) {
+                        Log.d("WMA", "hide mole " + i );
                         animateMoleHide(imgMoles[i]);
                     }
+
+                    Log.d("WMA", "Mole visibility @ " + i + " is: " + imgMoles[ i ].getVisibility() );
                 }
             });
         } );
@@ -199,11 +204,16 @@ import androidx.lifecycle.ViewModelProvider;
     private void animateMole( ImageView moleImg, boolean show ) {
         int width = moleImg.getWidth();
         int height = moleImg.getHeight();
-        int dur = 100; // dur / 1000 seconds
+        int dur = 100; // ( dur / 1000 ) seconds
+
+        if( show ){
+            moleImg.setVisibility(View.VISIBLE);
+            moleImg.setEnabled( true );
+        } else {
+            moleImg.setEnabled( false );
+        }
 
         int hiddenY = (int) (height * 0.6f);
-
-        moleImg.setVisibility(View.VISIBLE);
 
         // Start at appropriate Y
         moleImg.setTranslationY(show ? hiddenY : 0);
